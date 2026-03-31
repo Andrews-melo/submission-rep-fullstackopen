@@ -20,16 +20,25 @@ const Feedback = (props) => {
 }
 
 const Statistics = (props) => {
+
+  if (props.good != 0 || props.neutral != 0 || props.bad != 0) {
+    return (
+      <div>
+        <h2>Statistics</h2>
+        <div>good {props.good}</div>
+        <div>neutral {props.neutral}</div>
+        <div>bad {props.bad}</div>
+        <div>all {props.good + props.neutral + props.bad}</div>
+        <div>average {(props.good - props.bad) / (props.good + props.neutral + props.bad)}</div>
+        <div>positivo {(props.good / (props.good + props.neutral + props.bad)) * 100} %</div>
+      </div>)
+  }
+
   return (
-    <>
+    <div>
       <h2>Statistics</h2>
-      <div>good {props.good}</div>
-      <div>neutral {props.neutral}</div>
-      <div>bad {props.bad}</div>
-      <div>all {props.good + props.neutral + props.bad}</div>
-      <div>average {(props.good - props.bad) / (props.good + props.neutral + props.bad)}</div>
-      <div>positivo {(props.good / (props.good + props.neutral + props.bad)) * 100} %</div>
-    </>
+      <div>No feedback given</div>
+    </div>
   )
 }
 
