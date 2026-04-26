@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import axios from 'axios'
+import personService from './services/persons.service'
 
 const Filter = (props) => {
   const { newFilter, handleFilterChange } = props
@@ -61,10 +61,10 @@ const App = () => {
       number: newNumber
     }
 
-    axios
-      .post('http://localhost:3001/persons', data)
-      .then(response => {
-        setPersons(persons.concat(response.data))
+    personService
+      .create(data)
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
       })
