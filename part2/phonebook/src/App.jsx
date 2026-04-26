@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import personService from './services/persons.service'
 
 const Filter = (props) => {
@@ -40,17 +40,16 @@ const Person = ({ person, deletePerson }) => {
 }
 
 const App = () => {
-  const [persons, setPersons] = useState(
-    [
-      { name: 'Arto Hellas', number: '040-123456', id: 1 },
-      { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
-      { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
-      { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
-    ]
-  )
+  const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
+
+  useEffect(() => {
+    personService
+      .getAll()
+      .then(returnedPerson => setPersons(returnedPerson))
+  }, [])
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -59,8 +58,16 @@ const App = () => {
       return
     }
 
-    if (persons.find(person => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`)
+    const person = persons.find(person => person.name === newName)
+
+    if (person) {
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        personService
+          .update(person.id, { name: newName, number: newNumber })
+          .then(returnedPerson => {
+            setPersons(persons.map(person => person.id === returnedPerson.id ? returnedPerson : person))
+          })
+      }
       return
     }
 
