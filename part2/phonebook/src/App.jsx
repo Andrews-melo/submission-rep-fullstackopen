@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import axios from 'axios'
 
 const Filter = (props) => {
   const { newFilter, handleFilterChange } = props
@@ -60,9 +61,13 @@ const App = () => {
       number: newNumber
     }
 
-    setPersons(persons.concat(data))
-    setNewName('')
-    setNewNumber('')
+    axios
+      .post('http://localhost:3001/persons', data)
+      .then(response => {
+        setPersons(persons.concat(response.data))
+        setNewName('')
+        setNewNumber('')
+      })
   }
 
   const handleNameChange = (event) => {
