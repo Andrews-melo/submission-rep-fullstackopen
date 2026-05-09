@@ -47,7 +47,8 @@ const App = () => {
         {countries.length === 1 ? <Country country={countries[0]} /> : countries.length > 10 ? 'Too many matches, specify another filter' :
           countries.map(country => (
             <div key={country.cca3}>
-              <p>{country.name.common}</p>
+              <label>{country.name.common}</label>
+              <button onClick={() => setSearchTerm(country.name.common)}>show</button>
             </div>
           ))}
       </div>
