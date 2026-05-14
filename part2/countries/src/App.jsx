@@ -18,6 +18,32 @@ const Country = ({ country }) => {
   )
 }
 
+const Weather = ({ country }) => {
+  const [weather, setWeather] = useState([])
+  const [icon, setIcon] = useState(null)
+  const capital = country?.capital[0]
+
+  if (!capital) {
+    return null
+  }
+
+  useEffect(() => {
+    axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${capital}&appid=${import.meta.env.VITE_API_KEY}`).then((res) => {
+      setWeather(res.data)
+      setIcon(res.data.weather[0].icon)
+    })
+  }, [capital])
+
+  return (
+    <div>
+      <h1>Weather in {capital}</h1>
+      <p>Temperature {(weather?.main?.temp - 273.15)?.toFixed(2)} Celsius</p>
+      <img src={`https://openweathermap.org/img/wn/${icon}@2x.png`} alt="Weather Icon" />
+      <p>Wind {(weather?.wind?.speed)?.toFixed(2)} m/s</p>
+    </div>
+  )
+}
+
 const App = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [countries, setCountries] = useState([])
@@ -40,7 +66,7 @@ const App = () => {
   return (
     <>
       <div>
-        <label>find countries</label>
+        <label>find countries </label>
         <input type="text" onChange={handleCountryChange} value={searchTerm} />
       </div>
       <div>
@@ -52,6 +78,7 @@ const App = () => {
             </div>
           ))}
       </div>
+      {countries.length === 1 && <Weather country={countries[0]} />}
     </>
   )
 }
